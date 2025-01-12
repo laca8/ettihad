@@ -14,6 +14,8 @@ const sponsorSportRoutes = require("./routes/sponsors/sportSponsor");
 const sponsorClubRoutes = require("./routes/sponsors/clubSponsor");
 const infraRoutes = require("./routes/infra/Infra");
 const memberRoute = require("./routes/member/member");
+const boardRoute = require("./routes/boards/board");
+const lecRoute = require("./routes/lecture/lecture");
 const app = express();
 db();
 dotenv.config();
@@ -33,6 +35,8 @@ app.use("/api/sport-sponsor", sponsorSportRoutes);
 app.use("/api/club-sponsor", sponsorClubRoutes);
 app.use("/api/member", memberRoute);
 app.use("/api/infra", infraRoutes);
+app.use("/api/boards", boardRoute);
+app.use("/api/lectures", lecRoute);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../client/dist")));

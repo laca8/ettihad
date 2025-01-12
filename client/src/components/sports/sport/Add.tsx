@@ -76,7 +76,7 @@ const Add = ({ row }: Props) => {
             setNumStadium(row.nums)
             setArrLevels(row.stadiums)
         }
-        // console.log(row?.stadiums);
+
     }, [row, id])
     useEffect(() => {
         setNotify(toast.error(error));
@@ -120,12 +120,12 @@ const Add = ({ row }: Props) => {
                         <span className="invisible">{notify}</span>
                     </div>
                 )}
-                <div className='flex flex-col items-center text-zinc-900 border-2 border-yellow-600 p-2 text-center rounded-xl w-20 m-auto text-xl font-bold mb-4'>
+                <div className='flex flex-col items-center text-zinc-900 border-2 border-yellow-600 p-2 text-center rounded-xl w-32 m-auto text-xl font-bold mb-4'>
                     <div className="flex gap-8 items-center">
                         <div className="animate-bounce">
                             <LoaderPinwheel className="w-10 h-10 text-yellow-600 shadow-lg" />
                         </div>
-                        <h1 className='text-white text-center'>G<span className='text-yellow-500'>a</span>me</h1>
+                        <h1 className='text-white text-center w-32'>الالعاب</h1>
                         <div className="animate-bounce">
                             <Volleyball className="w-10 h-10 text-green-500 shadow-lg" />
                         </div>
@@ -174,7 +174,7 @@ const Add = ({ row }: Props) => {
                         </div>
                         <div className='mt-4'>
                             <button type='submit' className="btn hover:bg-green-300 bg-green-800 text-white hover:text-black">save</button>
-                            <button className="btn hover:bg-green-300 bg-green-800 text-white hover:text-black ml-2" onClick={() => handleEdit()} >update</button>
+                            <button className="btn hover:bg-green-300 bg-green-800 text-white hover:text-black mr-2" onClick={() => handleEdit()} >update</button>
                         </div>
                     </div>
 

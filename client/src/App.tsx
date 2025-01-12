@@ -13,6 +13,8 @@ import Sport_Sponsor from './pages/sponsors/Sport_Sponsor'
 import { ToastContainer } from "react-toastify";
 import Infra from './pages/infra/Infra'
 import Member from './pages/member/Member'
+import Boards from './pages/board/Board'
+import Lecture from './pages/lecture/Lecture'
 function App() {
 
   return (
@@ -43,6 +45,10 @@ function App() {
         <Route path='/infra' element={<Infra />}>
         </Route>
         <Route path='/members' element={<Member />}>
+        </Route>
+        <Route path='/boards' element={<Boards />}>
+        </Route>
+        <Route path='/lecs' element={<Lecture />}>
         </Route>
       </Routes>
     </BrowserRouter>

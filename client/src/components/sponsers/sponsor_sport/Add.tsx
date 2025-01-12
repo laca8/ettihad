@@ -58,7 +58,7 @@ const Add = ({ row }: Props) => {
         }
         // Validate file size
         if (file.size > maxSize) {
-            alert("File is too large. Maximum size is 1MB.");
+            alert("File is too large. Maximum size is 500KB.");
             return;
         }
         // Create preview
@@ -235,7 +235,7 @@ const Add = ({ row }: Props) => {
                         <div className="animate-bounce">
                             <LoaderPinwheel className="w-10 h-10 text-yellow-600 shadow-lg" />
                         </div>
-                        <h1 className='text-white text-center '>Sp<span className='text-yellow-500 '>o</span>rt_S<span className='text-yellow-500 '>p</span>onsor</h1>
+                        <h1 className='text-white text-center w-48'>راعي الرياضة</h1>
                         <div className="animate-bounce">
                             <Volleyball className="w-10 h-10 text-green-500 shadow-lg" />
                         </div>
@@ -321,7 +321,7 @@ const Add = ({ row }: Props) => {
                         </div>
                         <div className='mt-4'>
                             <button type='submit' className="btn hover:bg-green-300 bg-green-800 text-white hover:text-black">save</button>
-                            <button onClick={() => handleEdit()} className="btn hover:bg-green-300 bg-green-800 text-white hover:text-black ml-2">update</button>
+                            <button onClick={() => handleEdit()} className="btn hover:bg-green-300 bg-green-800 text-white hover:text-black mr-2">update</button>
                         </div>
                     </div>
 

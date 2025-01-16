@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "node --max-old-space-size=3072 npm i && cd backend && npm install",
+    "build": "npm i && cd backend && npm install",
     "server": "npm run start --prefix backend",
     "client": "npm run dev --prefix  client",
     "dev": "concurrently \"npm run server \" \"npm run client\"",

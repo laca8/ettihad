@@ -99,9 +99,10 @@ const Add = ({ row }: Props) => {
         const newArr = [...achievement, ''];
         setAchievement(newArr);
     };
-    const deleteAchievment = () => {
-        achievement.pop()
-    }
+    // const deleteAchievment = () => {
+    //     console.log('i')
+    //     achievement.splice(0, 1)
+    // }
     const handleAchiement = (index: number, value: string) => {
         const newArr = [...achievement];
         newArr[index] = value;
@@ -181,7 +182,7 @@ const Add = ({ row }: Props) => {
                         <>
                             <div className='flex gap-2'>
                                 <button onClick={addAcheviement} type='button' className='bg-green-500 p-1 shadow-lg rounded-full text-white'>+</button>
-                                <button onClick={deleteAchievment} type='button' className='bg-red-500 p-1 shadow-lg rounded-full text-white'>x</button>
+                                {/* <button onClick={deleteAchievment} type='button' className='bg-red-500 p-1 shadow-lg rounded-full text-white'>x</button> */}
                             </div>
                             <div className='grid grid-cols-4 w-full gap-4 max-lg:grid-cols-1 justify-center mt-2 mb-2'>
                                 {

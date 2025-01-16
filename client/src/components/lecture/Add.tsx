@@ -37,7 +37,12 @@ const Add = ({ row }: Props) => {
     const [id, setId] = useState('')
     const [codeBoard, setCodeBoard] = useState('')
     const [images, setImages] = useState<string[]>([])
+    const [upload, setUpload] = useState(false)
     const [num, setNum] = useState(0)
+    const [date, setDate] = useState('')
+    const [from, setForm] = useState('')
+    const [to, setTo] = useState('')
+    const [par, setPar] = useState('')
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
@@ -46,9 +51,14 @@ const Add = ({ row }: Props) => {
         }
         const lectureData: lecture = {
             code: Number(id),
-            num,
+            num: images.length,
             codeBoard,
-            images
+            images,
+            par,
+            date,
+            to,
+            from,
+
         };
         dispatch(addLecture(lectureData));
         setId('')
@@ -70,9 +80,13 @@ const Add = ({ row }: Props) => {
         const lectureData = {
             _id: row?._id ? row?._id : '',
             code: Number(id),
-            num,
+            num: images.length,
             codeBoard,
-            images
+            images,
+            par,
+            date,
+            to,
+            from,
 
         };
         dispatch(editLecture(lectureData));
@@ -92,55 +106,51 @@ const Add = ({ row }: Props) => {
     useEffect(() => {
         setNotify(toast.error(error));
     }, [error]);
-    useEffect(() => {
-        if (num) {
-            setImages(
-                new Array(Number(num ? num : 0)).fill('')
-            );
+
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg'];
+
+    const validateFile = (file: File): boolean => {
+        // Check file size
+        if (file.size > MAX_FILE_SIZE) {
+            alert(`File ${file.name} is too large. Maximum size is 5MB`);
+            return false;
         }
 
-
-    }, [num]);
-
-    const handleChangeImages = async (e: React.ChangeEvent<HTMLInputElement | null>, index: number) => {
-        const file = e.target.files ? e.target.files[0] : null;
-        const allowedTypes = ["image/jpeg", "image/png", "images/jpg"];
-        const maxSize = 0.5 * 1024 * 1024; // 5MB in bytes
-        if (!file) return;
-
-        // Validate file type
-        if (!allowedTypes.includes(file.type)) {
-            alert("Invalid file type. Please upload a JPEG, PNG, JPG.");
-            return;
+        // Check file type
+        if (!ALLOWED_TYPES.includes(file.type)) {
+            alert(`File ${file.name} is not a supported image type. Please use JPG, PNG, GIF, or WebP`);
+            return false;
         }
-        // Validate file size
-        if (file.size > maxSize) {
-            alert("File is too large. Maximum size is 500KB.");
-            return;
-        }
-        // Create preview
-        const reader = new FileReader();
-        // reader.onloadend = () => {
-        //   setImage(reader.result);
-        // };
-        reader.readAsDataURL(file);
 
+        return true;
+    };
+
+    const handleChangeImages = async (e: React.ChangeEvent<HTMLInputElement | null>) => {
+        setUpload(true)
+        const files = e.target.files
+        if (!files) return;
+        const validFiles = Array.from(files).filter(validateFile);
         // Upload to Firebase
         try {
 
+            for (let index = 0; index < validFiles.length; index++) {
+                const file = validFiles[index];
+                const filename = `${Date.now()}-${file.name}`;
+                const storageRef = ref(storage, `images/${filename}`);
 
-            const filename = `${Date.now()}-${file.name}`;
-            const storageRef = ref(storage, `images/${filename}`);
-
-            const snapshot = await uploadBytes(storageRef, file);
-            const downloadURL = await getDownloadURL(snapshot.ref);
-
-            const newArr = [...images];
-            newArr[index] = downloadURL;
-            setImages(newArr);
+                const snapshot = await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                const newArr = [...images];
+                newArr[index] = downloadURL;
+                setImages((images) => [...images, downloadURL])
+                console.log(images);
+                setUpload(false)
+            }
 
         } catch (error) {
             console.error('Upload failed:', error);
+            setUpload(false)
 
         }
 
@@ -150,6 +160,10 @@ const Add = ({ row }: Props) => {
             setId(row?.code?.toString())
             setCodeBoard(row?.codeBoard)
             setNum(row?.num)
+            setDate(row?.date)
+            setForm(row.from)
+            setTo(row?.to)
+            setPar(row?.par)
             setImages(row?.images)
         }
         console.log(games);
@@ -158,9 +172,21 @@ const Add = ({ row }: Props) => {
     useEffect(() => {
         dispatch(fetchBoards({ code: '' }))
     }, [dispatch])
+    const handleRemove = (i: number) => {
+        // Add logic to handle delete operation
+        const isRemove = window.confirm('هل تريد حذف الصورة')
+        // Add logic to handle delete operation
+        if (isRemove) {
+            setImages(images.filter((_, index) => index !== i))
+            console.log(images);
+
+            console.log(`Deleting item with id: ${i}`);
+        }
+
+    }
     return (
         loading ? <Loader /> : (
-            <div >
+            <div  >
                 {error && (
                     <div>
                         <span className="invisible">{notify}</span>
@@ -177,63 +203,99 @@ const Add = ({ row }: Props) => {
                         </div>
                     </div>
                 </div>
-                <form className='w-full ' onSubmit={handleSubmit}>
-                    <div className='border-2 border-yellow-600 p-4  shadow-md rounded-xl'>
-                        <div className='grid grid-cols-4 max-lg:grid-cols-1 justify-center  w-full gap-4 '>
-                            <div className='flex flex-col gap-2'>
-                                <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-32 rounded-xl text-center'>رقم المحضر</label>
-                                <input type="text" value={id} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setId(e.target.value)} placeholder="Type here" className="p-2 bg-gray-50 rounded-xl w-full max-w-xs shadow-md border-2 border-yellow-600" />
+                <div className='grid grid-cols-5 max-md:grid-cols-1 gap-4 h-full'>
+                    <form className='w-full  col-span-3 ' onSubmit={handleSubmit}>
+                        <div className='border-2 border-yellow-600 p-4  shadow-md rounded-xl'>
+                            <div className='grid grid-cols-3 max-lg:grid-cols-1 justify-center  w-full h-full gap-4 '>
+                                <div className='flex flex-col gap-2'>
+                                    <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-32 rounded-xl text-center'>رقم المحضر</label>
+                                    <input type="text" value={id} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setId(e.target.value)} placeholder="Type here" className="p-2 bg-gray-50 rounded-xl w-full max-w-xs shadow-md border-2 border-yellow-600" />
+                                </div>
+                                <div className='flex gap-2 flex-col'>
+
+                                    <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-20 rounded-xl text-center'>المجلس</label>
+                                    <select value={codeBoard} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCodeBoard(e.target.value)} className="p-2 bg-gray-50 rounded-xl w-full max-w-xs shadow-md border-2 border-yellow-600">
+                                        <option value="" disabled>Select</option>
+                                        {
+                                            games?.map((x, i) => (
+                                                <option value={x?.code} key={i}>{x?.code}</option>
+
+                                            ))
+                                        }
+                                    </select>
+
+                                </div>
+                                <div className='flex flex-col gap-2'>
+                                    <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-32 rounded-xl text-center'>التاريخ</label>
+                                    <input type="date" value={date} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDate(e.target.value)} placeholder="Type here" className="p-2 bg-gray-50 rounded-xl w-full max-w-xs shadow-md border-2 border-yellow-600" />
+                                </div>
+                                <div className='flex flex-col gap-2'>
+                                    <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-32 rounded-xl text-center'>من</label>
+                                    <input type="text" value={from} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setForm(e.target.value)} placeholder="Type here" className="p-2 bg-gray-50 rounded-xl w-full max-w-xs shadow-md border-2 border-yellow-600" />
+                                </div>
+                                <div className='flex flex-col gap-2'>
+                                    <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-32 rounded-xl text-center'>الي</label>
+                                    <input type="text" value={to} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTo(e.target.value)} placeholder="Type here" className="p-2 bg-gray-50 rounded-xl w-full max-w-xs shadow-md border-2 border-yellow-600" />
+                                </div>
+
+                                <div className='flex gap-2 flex-col'>
+                                    <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-32 rounded-xl text-center'>عدد المحاضر</label>
+                                    <input value={num} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNum(Number(e.target.value))} type="number" placeholder="Type here" className="p-2 bg-gray-50 rounded-xl w-full max-w-xs shadow-md border-2 border-yellow-600" />
+                                </div>
+                                <div className='flex gap-2 flex-col ' >
+                                    <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-64 rounded-xl text-center'> المحاضر ( يمكنك اختيار مجموعة من الصور )</label>
+                                    <input
+                                        type="file"
+                                        multiple
+                                        accept={ALLOWED_TYPES.join(',')}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeImages(e)}
+
+                                        id="file-upload"
+                                        className="p-2 bg-gray-50 rounded-xl w-full max-w-xs shadow-md border-2 border-yellow-600"
+                                    />
+
+                                </div>
+                                <div className='flex flex-col gap-2'>
+                                    <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-32 rounded-xl text-center'>الملخص</label>
+                                    <textarea
+                                        placeholder="الملخص"
+                                        value={par}
+                                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setPar(e.target.value)}
+                                        className="textarea textarea-bordered textarea-lg w-full max-w-xs"></textarea>
+                                </div>
+
+
                             </div>
-                            <div className='flex gap-2 flex-col'>
-
-                                <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-20 rounded-xl text-center'>المجلس</label>
-                                <select value={codeBoard} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCodeBoard(e.target.value)} className="p-2 bg-gray-50 rounded-xl w-full max-w-xs shadow-md border-2 border-yellow-600">
-                                    <option value="" disabled>Select</option>
-                                    {
-                                        games?.map((x, i) => (
-                                            <option value={x?.code} key={i}>{x?.code}</option>
-
-                                        ))
-                                    }
-                                </select>
-
-                            </div>
 
 
-                            <div className='flex gap-2 flex-col '>
-                                <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-32 rounded-xl text-center'>عدد المحاضر</label>
-                                <input value={num} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNum(Number(e.target.value))} type="number" placeholder="Type here" className="p-2 bg-gray-50 rounded-xl w-full max-w-xs shadow-md border-2 border-yellow-600" />
+
+
+
+                            <div className='mt-4'>
+                                <button type='submit' className="btn hover:bg-green-300 bg-green-800 text-white hover:text-black">save</button>
+                                <button onClick={() => handleEdit()} className="btn hover:bg-green-300 bg-green-800 text-white hover:text-black mr-2">update</button>
                             </div>
                         </div>
 
-                        <div className='grid grid-cols-4 max-lg:grid-cols-1 justify-center  w-full gap-4 mt-2 mb-2'>
+
+                    </form >
+                    <div className='w-full col-span-2'>
+                        <p className='font-bold text-zinc-100 bg-yellow-600 p-1  rounded-xl text-center mb-2 mt-2 w-full'>المحاضر</p>
+                        <div className='grid grid-cols-1 max-lg:grid-cols-1   h-96 overflow-y-auto'>
+
                             {
-                                images.map((x, i) => (
-                                    <div key={i} className='flex flex-col  gap-4 w-full '>
-                                        <div className='flex gap-2 flex-col ' >
-                                            <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-52 rounded-xl text-center'>الصورة {i + 1}</label>
-                                            <input type="file" placeholder="Type here" className="p-2 bg-gray-50 rounded-xl w-full max-w-xs shadow-md border-2 border-yellow-600" onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeImages(e, i)} />
-                                        </div>
-                                        <div className='flex gap-2 flex-col' >
-                                            <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-52 rounded-xl text-center'>الصورة {i + 1}</label>
-                                            <img className="w-44 h-48 p-2 bg-gray-50 rounded-xl shadow-md border-2 border-yellow-600" src={x} />
-                                        </div>
-
+                                upload ? <p>Upload.....</p> : images.length != 0 ? images.map((x, i) => (
+                                    <div className='flex relative' key={i} >
+                                        <img className="p-2 w-full h-96 bg-gray-50 rounded-xl shadow-md border-2 border-yellow-600" src={x} />
+                                        <button className="btn btn-error absolute right-0 top-0" type='button' onClick={() => handleRemove(i)}>X</button>
                                     </div>
-                                ))
+                                )) : null
                             }
-                        </div>
-
-
-
-                        <div className='mt-4'>
-                            <button type='submit' className="btn hover:bg-green-300 bg-green-800 text-white hover:text-black">save</button>
-                            <button onClick={() => handleEdit()} className="btn hover:bg-green-300 bg-green-800 text-white hover:text-black mr-2">update</button>
                         </div>
                     </div>
 
 
-                </form >
+                </div>
 
             </div >
         )

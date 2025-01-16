@@ -177,4 +177,8 @@ export type lecture = {
   num: number;
   codeBoard: string;
   images: string[];
+  date: string;
+  from: string;
+  to: string;
+  par: string;
 };

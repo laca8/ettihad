@@ -1,8 +1,8 @@
 
 const Header = () => {
     return (
-        <div className="navbar shadow-md text-white bg-zinc-900 " >
-            <div className="navbar-start" >
+        <div className="navbar shadow-md text-white bg-zinc-900 w-full grid grid-cols-3" dir="ltr">
+            <div className="navbar-start col-span-1  w-full" >
                 <div className="dropdown">
                     <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden" >
                         <svg
@@ -53,7 +53,7 @@ const Header = () => {
                     <img src='https://cdn-icons-png.flaticon.com/512/7438/7438654.png' className='h-12 w-12 border-2 border-yellow-600 rounded-xl' />
                 </a>
             </div>
-            <div className="navbar-end hidden lg:flex bg-zinc-900" >
+            <div className="navbar-end hidden lg:flex bg-zinc-900 col-span-2  w-full">
                 <ul className="menu menu-horizontal px-1 bg-zinc-900">
                     <li>
                         <details>

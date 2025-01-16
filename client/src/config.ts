@@ -13,8 +13,8 @@ const config: AppConfig = {
   projectId: "yarab-uploadfile-11dcf",
   storageBucket: "yarab-uploadfile-11dcf.appspot.com",
   messagingSenderId: "905701233897",
-  appId: "1:905701233897:web:6aad1557eaeca4be058c78",
-  measurementId: "G-Z1EEY09B9F",
+  appId: "1:905701233897:web:8a051da6dedc525e058c78",
+  measurementId: "G-Z2R9V115ZK",
 };
 
 export default config;

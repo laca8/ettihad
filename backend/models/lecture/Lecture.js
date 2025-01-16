@@ -14,6 +14,22 @@ const lectureSchema = new mongoose.Schema(
     num: {
       type: String,
     },
+    date: {
+      type: String,
+      required: true,
+    },
+    from: {
+      type: String,
+      required: true,
+    },
+    to: {
+      type: String,
+      required: true,
+    },
+    par: {
+      type: String,
+      required: true,
+    },
   },
 
   {

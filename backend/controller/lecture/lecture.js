@@ -2,6 +2,8 @@ const Lecture = require("../../models/lecture/Lecture");
 
 const addLecture = async (req, res) => {
   try {
+    // console.log(req.body);
+
     const lec = new Lecture(req.body);
     await lec.save();
     res.status(201).send(lec);
@@ -37,6 +39,8 @@ const deleteLecture = async (req, res) => {
 };
 const getLectures = async (req, res) => {
   try {
+    console.log(req.query);
+
     const k1 = req.query.code
       ? {
           code: {
@@ -44,8 +48,15 @@ const getLectures = async (req, res) => {
           },
         }
       : {};
+    const k2 = req.query.par
+      ? {
+          par: {
+            $regex: req.query.par?.toString(),
+          },
+        }
+      : {};
 
-    const lecs = await Lecture.find({ ...k1 });
+    const lecs = await Lecture.find({ ...k1, ...k2 });
 
     res.status(201).send(lecs);
   } catch (error) {

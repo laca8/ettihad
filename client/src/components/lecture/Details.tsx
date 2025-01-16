@@ -11,9 +11,10 @@ type obj = lecture & objectId
 type Props = {
     row: obj | null,
     setRow: React.Dispatch<React.SetStateAction<null | obj>>;
-    code: string
+    code: string,
+    par: string
 }
-const Details = ({ row, setRow, code }: Props) => {
+const Details = ({ row, setRow, code, par }: Props) => {
     const dispatch = useDispatch<AppDispatch>()
     const [notify, setNotify] = useState<number | string>("");
     const lectureSlice = useSelector((state: { lectureSlice: { loading: boolean, success: boolean, game: lecture, error: string, games: obj[] } }) => state.lectureSlice)
@@ -24,12 +25,14 @@ const Details = ({ row, setRow, code }: Props) => {
     }
     useEffect(() => {
         const keyword: {
-            code: string
+            code: string,
+            par: string
         } = {
-            code
+            code,
+            par
         }
         dispatch(fetchLectures(keyword))
-    }, [code, dispatch])
+    }, [code, par, dispatch])
     useEffect(() => {
         setNotify(toast.error(error));
     }, [error]);
@@ -60,8 +63,13 @@ const Details = ({ row, setRow, code }: Props) => {
                             <tr className='text-yellow-600  text-md cursor-pointer'>
                                 <th>code</th>
                                 <th>رقم المجلس</th>
+                                <th>التاريخ</th>
+                                <th>من</th>
+                                <th>الي</th>
+                                <th>عدد المحاضر</th>
+                                <th>الملخص</th>
 
-                                <th>المحاضر</th>
+                                {/* <th>المحاضر</th> */}
 
                                 <th>#</th>
                             </tr>
@@ -72,8 +80,13 @@ const Details = ({ row, setRow, code }: Props) => {
                                     <tr className='hover:bg-zinc-900' key={i} onClick={() => handleClick(x._id)}>
                                         <th className='text-md'>{x.code}</th>
                                         <td className='text-md'>{x.codeBoard}</td>
+                                        <td className='text-md'>{x.date}</td>
+                                        <td className='text-md'>{x.from}</td>
+                                        <td className='text-md'>{x.to}</td>
+                                        <td className='text-md'>{x.num}</td>
+                                        <td className='text-md'>{x.par}</td>
 
-                                        <div className='text-md grid grid-cols-2'>
+                                        {/* <div className='text-md grid grid-cols-2'>
                                             {
                                                 x.images.map((y, i) => (
                                                     <td key={i}>
@@ -81,11 +94,9 @@ const Details = ({ row, setRow, code }: Props) => {
                                                     </td>
                                                 ))
                                             }
-                                        </div>
-
+                                        </div> */}
                                         <td className='text-md text-red-500  '>
                                             <Trash2 onClick={() => handleDelete(x._id)} />
-
                                         </td>
                                     </tr>
                                 ))

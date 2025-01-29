@@ -15,7 +15,11 @@ import Infra from './pages/infra/Infra'
 import Member from './pages/member/Member'
 import Boards from './pages/board/Board'
 import Lecture from './pages/lecture/Lecture'
+import Reporter from './pages/reporter/Reporter'
+import AdminPage from './pages/admin/AdminPage'
+import Login from './pages/user/Login'
 function App() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
 
   return (
     <BrowserRouter>
@@ -49,6 +53,12 @@ function App() {
         <Route path='/boards' element={<Boards />}>
         </Route>
         <Route path='/lecs' element={<Lecture />}>
+        </Route>
+        <Route path='/reporter' element={<Reporter />}>
+        </Route>
+        <Route path='/admin' element={<AdminPage />}>
+        </Route>
+        <Route path='/login' element={user?.data?.name ? <Home /> : <Login />}>
         </Route>
       </Routes>
     </BrowserRouter>

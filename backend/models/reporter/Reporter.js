@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const lectureSchema = new mongoose.Schema(
+const reporterSchema = new mongoose.Schema(
   {
     code: {
       type: String,
@@ -18,7 +18,14 @@ const lectureSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
+    from: {
+      type: String,
+      required: true,
+    },
+    to: {
+      type: String,
+      required: true,
+    },
     par: {
       type: String,
       required: true,
@@ -29,4 +36,4 @@ const lectureSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-module.exports = mongoose.model("lecture", lectureSchema);
+module.exports = mongoose.model("reporter", reporterSchema);

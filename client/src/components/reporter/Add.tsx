@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { BadgeX, Download, LoaderPinwheel, Volleyball } from 'lucide-react';
-import { board, lecture, objectId } from '../../types/type';
+import { board, reporter, objectId } from '../../types/type';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Loader from '../features/Loader';
 import { AppDispatch } from '../../redux/store';
 import { toast } from "react-toastify";
-import { addLecture, editLecture } from '../../redux/slicers/lecture';
-type obj = lecture & objectId
+import { addReporter, editReporter } from '../../redux/slicers/reporter';
+type obj = reporter & objectId
 type Props = { row: obj | null }
 
 import { initializeApp } from 'firebase/app';
@@ -30,8 +30,8 @@ const storage = getStorage(app);
 const Add = ({ row }: Props) => {
     const dispatch = useDispatch<AppDispatch>()
     const [notify, setNotify] = useState<number | string>("");
-    const lectureSlice = useSelector((state: { lectureSlice: { loading: boolean, game: lecture, error: string, success: boolean, games: lecture[] } }) => state.lectureSlice)
-    const { loading, error, success } = lectureSlice
+    const reporterSlice = useSelector((state: { reporterSlice: { loading: boolean, game: reporter, error: string, success: boolean, games: reporter[] } }) => state.reporterSlice)
+    const { loading, error, success } = reporterSlice
     const boardSlice = useSelector((state: { boardSlice: { loading: boolean, game: board, error: string, success: boolean, games: board[] } }) => state.boardSlice)
     const { games } = boardSlice
     const [id, setId] = useState('')
@@ -40,7 +40,8 @@ const Add = ({ row }: Props) => {
     const [upload, setUpload] = useState(false)
     const [num, setNum] = useState(0)
     const [date, setDate] = useState('')
-
+    const [from, setFrom] = useState('')
+    const [to, setTo] = useState('')
     const [par, setPar] = useState('')
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -48,17 +49,21 @@ const Add = ({ row }: Props) => {
         if (id === '' || codeBoard === '' || num === 0) {
             setNotify(toast.error('please fill all fields'));
         }
-        const lectureData: lecture = {
+        console.log(id);
+
+        const lectureData: reporter = {
             code: Number(id),
             num: images.length,
             codeBoard,
             images,
             par,
             date,
+            to,
+            from
 
 
         };
-        dispatch(addLecture(lectureData));
+        dispatch(addReporter(lectureData));
         setId('')
         setCodeBoard('')
         setNum(0)
@@ -83,10 +88,12 @@ const Add = ({ row }: Props) => {
             images,
             par,
             date,
+            to,
+            from
 
 
         };
-        dispatch(editLecture(lectureData));
+        dispatch(editReporter(lectureData));
         setId('')
         setCodeBoard('')
         setNum(0)
@@ -158,7 +165,8 @@ const Add = ({ row }: Props) => {
             setCodeBoard(row?.codeBoard)
             setNum(row?.num)
             setDate(row?.date)
-
+            setTo(row?.to)
+            setFrom(row?.from)
             setPar(row?.par)
             setImages(row?.images)
         }
@@ -203,7 +211,7 @@ const Add = ({ row }: Props) => {
                         <div className="animate-bounce">
                             <LoaderPinwheel className="w-10 h-10 text-yellow-600 shadow-lg" />
                         </div>
-                        <h1 className='text-white text-center w-36'>المحاضر</h1>
+                        <h1 className='text-white text-center w-36'>المراسلات</h1>
                         <div className="animate-bounce">
                             <Volleyball className="w-10 h-10 text-green-500 shadow-lg" />
                         </div>
@@ -214,7 +222,7 @@ const Add = ({ row }: Props) => {
                         <div className='border-2 border-yellow-600 p-4  shadow-md rounded-xl'>
                             <div className='grid grid-cols-3 max-lg:grid-cols-1 justify-center  w-full h-full gap-4 '>
                                 <div className='flex flex-col gap-2'>
-                                    <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-32 rounded-xl text-center'>رقم المحضر</label>
+                                    <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-32 rounded-xl text-center'>رقم </label>
                                     <input type="text" value={id} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setId(e.target.value)} placeholder="Type here" className="p-2 bg-gray-50 rounded-xl w-full max-w-xs shadow-md border-2 border-yellow-600" />
                                 </div>
                                 <div className='flex gap-2 flex-col'>
@@ -235,14 +243,21 @@ const Add = ({ row }: Props) => {
                                     <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-32 rounded-xl text-center'>التاريخ</label>
                                     <input type="date" value={date} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDate(e.target.value)} placeholder="Type here" className="p-2 bg-gray-50 rounded-xl w-full max-w-xs shadow-md border-2 border-yellow-600" />
                                 </div>
-
+                                <div className='flex flex-col gap-2'>
+                                    <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-32 rounded-xl text-center'>من</label>
+                                    <input type="text" value={from} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFrom(e.target.value)} placeholder="Type here" className="p-2 bg-gray-50 rounded-xl w-full max-w-xs shadow-md border-2 border-yellow-600" />
+                                </div>
+                                <div className='flex flex-col gap-2'>
+                                    <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-32 rounded-xl text-center'>الي</label>
+                                    <input type="text" value={to} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTo(e.target.value)} placeholder="Type here" className="p-2 bg-gray-50 rounded-xl w-full max-w-xs shadow-md border-2 border-yellow-600" />
+                                </div>
 
                                 <div className='flex gap-2 flex-col'>
-                                    <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-32 rounded-xl text-center'>عدد المحاضر</label>
+                                    <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-32 rounded-xl text-center'>عدد المراسلات</label>
                                     <input value={num} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNum(Number(e.target.value))} type="number" placeholder="Type here" className="p-2 bg-gray-50 rounded-xl w-full max-w-xs shadow-md border-2 border-yellow-600" />
                                 </div>
                                 <div className='flex gap-2 flex-col ' >
-                                    <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-48 rounded-xl text-center'> المحاضر ( يمكنك اختيار مجموعة من الصور )</label>
+                                    <label className='font-bold text-zinc-100 bg-yellow-600 p-1 w-48 rounded-xl text-center'> المراسلات ( يمكنك اختيار مجموعة من الصور )</label>
                                     <input
                                         type="file"
                                         multiple
@@ -266,10 +281,6 @@ const Add = ({ row }: Props) => {
 
                             </div>
 
-
-
-
-
                             <div className='mt-4'>
                                 <button type='submit' className="btn hover:bg-green-300 bg-green-800 text-white hover:text-black">save</button>
                                 <button onClick={() => handleEdit()} className="btn hover:bg-green-300 bg-green-800 text-white hover:text-black mr-2">update</button>
@@ -279,7 +290,7 @@ const Add = ({ row }: Props) => {
 
                     </form >
                     <div className='w-full col-span-2'>
-                        <p className='font-bold text-zinc-100 bg-yellow-600 p-1  rounded-xl text-center mb-2 mt-2 w-full'>المحاضر</p>
+                        <p className='font-bold text-zinc-100 bg-yellow-600 p-1  rounded-xl text-center mb-2 mt-2 w-full'>المراسلات</p>
                         <div className='grid grid-cols-1 max-lg:grid-cols-1   h-96 overflow-y-auto'>
 
                             {

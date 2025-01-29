@@ -12,6 +12,8 @@ import infraSlice from "./slicers/infraSlicer";
 import memberSlice from "./slicers/memberSlicer";
 import boardSlice from "./slicers/boardSlicer";
 import lectureSlice from "./slicers/lecture";
+import reporterSlice from "./slicers/reporter";
+import userSlice from "./slicers/userSlice";
 
 const store = configureStore({
   reducer: {
@@ -28,6 +30,8 @@ const store = configureStore({
     memberSlice: memberSlice,
     boardSlice: boardSlice,
     lectureSlice: lectureSlice,
+    reporterSlice: reporterSlice,
+    userSlice: userSlice,
   },
 });
 // Define the `AppDispatch` type from the store's dispatch function

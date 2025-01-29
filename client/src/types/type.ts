@@ -178,7 +178,23 @@ export type lecture = {
   codeBoard: string;
   images: string[];
   date: string;
+
+  par: string;
+};
+export type reporter = {
+  code: number;
+  num: number;
+  codeBoard: string;
+  images: string[];
+  date: string;
   from: string;
   to: string;
   par: string;
+};
+
+export type user = {
+  name: string;
+  isAdmin: boolean;
+  password: string;
+  permission: string;
 };

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { objectId, lecture } from '../../types/type';
+import { objectId, reporter } from '../../types/type';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
-import Loader from '../../components/features/Loader';
-import { fetchLectures, removeLecture } from '../../redux/slicers/lecture'
+import Loader from '../features/Loader';
+import { fetchReporters, removeReporter } from '../../redux/slicers/reporter'
 import { toast } from "react-toastify";
 import { Trash2 } from 'lucide-react';
-type obj = lecture & objectId
+type obj = reporter & objectId
 
 type Props = {
     row: obj | null,
@@ -17,8 +17,8 @@ type Props = {
 const Details = ({ row, setRow, code, par }: Props) => {
     const dispatch = useDispatch<AppDispatch>()
     const [notify, setNotify] = useState<number | string>("");
-    const lectureSlice = useSelector((state: { lectureSlice: { loading: boolean, success: boolean, game: lecture, error: string, games: obj[] } }) => state.lectureSlice)
-    const { loading, error, games, success } = lectureSlice
+    const reporterSlice = useSelector((state: { reporterSlice: { loading: boolean, success: boolean, game: reporter, error: string, games: obj[] } }) => state.reporterSlice)
+    const { loading, error, games, success } = reporterSlice
     const handleClick = (id: string): void => {
         setRow(games?.filter((x) => x._id == id)[0])
         console.log(row);
@@ -31,7 +31,7 @@ const Details = ({ row, setRow, code, par }: Props) => {
             code,
             par
         }
-        dispatch(fetchLectures(keyword))
+        dispatch(fetchReporters(keyword))
     }, [code, par, dispatch])
     useEffect(() => {
         setNotify(toast.error(error));
@@ -41,7 +41,7 @@ const Details = ({ row, setRow, code, par }: Props) => {
         const isRemove = window.confirm('هل تريد حذف البيانات؟')
         // Add logic to handle delete operation
         if (isRemove) {
-            dispatch(removeLecture(id))
+            dispatch(removeReporter(id))
             console.log(`Deleting item with id: ${id}`);
         }
         if (success) {
@@ -64,8 +64,9 @@ const Details = ({ row, setRow, code, par }: Props) => {
                                 <th>code</th>
                                 <th>رقم المجلس</th>
                                 <th>التاريخ</th>
-
-                                <th>عدد المحاضر</th>
+                                <th>من</th>
+                                <th>الي</th>
+                                <th>عدد المرسلات</th>
                                 <th>الملخص</th>
 
                                 {/* <th>المحاضر</th> */}
@@ -80,7 +81,8 @@ const Details = ({ row, setRow, code, par }: Props) => {
                                         <th className='text-md'>{x.code}</th>
                                         <td className='text-md'>{x.codeBoard}</td>
                                         <td className='text-md'>{x.date}</td>
-
+                                        <td className='text-md'>{x.from}</td>
+                                        <td className='text-md'>{x.to}</td>
                                         <td className='text-md'>{x.num}</td>
                                         <td className='text-md'>{x.par}</td>
 

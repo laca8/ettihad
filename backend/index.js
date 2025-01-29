@@ -16,6 +16,8 @@ const infraRoutes = require("./routes/infra/Infra");
 const memberRoute = require("./routes/member/member");
 const boardRoute = require("./routes/boards/board");
 const lecRoute = require("./routes/lecture/lecture");
+const repRoute = require("./routes/reporter/reporter");
+const userRoute = require("./routes/users/users");
 const app = express();
 db();
 dotenv.config();
@@ -37,6 +39,8 @@ app.use("/api/member", memberRoute);
 app.use("/api/infra", infraRoutes);
 app.use("/api/boards", boardRoute);
 app.use("/api/lectures", lecRoute);
+app.use("/api/reporters", repRoute);
+app.use("/api/users", userRoute);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../client/dist")));

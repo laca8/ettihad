@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 const Home = () => {
     return (
-        <div
+        <div dir="ltr"
             className={`justify-center  object-none  bg-no-repeat bg-cover bg-center rounded-lg h-[100vh] border-2`}
 
             style={{ backgroundImage: `url(https://image.slidesdocs.com/responsive-images/background/sports-sporting-goods-illustration-powerpoint-background_d0b8b878ea__960_540.jpg)` }}>

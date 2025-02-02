@@ -1,4 +1,5 @@
 import Header from './components/features/Header'
+import TopHeader from './components/features/TopHeader'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Sports from './pages/sport/Sports'
@@ -24,7 +25,9 @@ function App() {
   return (
     <BrowserRouter>
       <ToastContainer position="top-center" />
+      <TopHeader />
       <Header />
+
       <Routes>
         <Route path='/' element={<Home />}>
         </Route>

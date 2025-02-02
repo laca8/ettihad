@@ -27,7 +27,10 @@ const Login = () => {
         if (success) {
             window.location.href = '/'
         }
-
+        setCredentials({
+            name: '',
+            password: ''
+        })
     };
     useEffect(() => {
         if (error != null) {
@@ -36,16 +39,16 @@ const Login = () => {
         }
     }, [error])
     return (
-        <div className="min-h-screen  flex mt-10  justify-center">
+        <div className='min-h-screen  shadow-md rounded-xl w-full mx-auto py-10 mt-10'>
+            {
+                loading ? <Loader /> : (
+                    <div className=" h-1/2 p-8  shadow-md max-w-96 bg-black mx-auto rounded-xl border-2 border-yellow-600">
+                        <h1 className="text-2xl font-bold mb-6 text-center text-white">تسجيل الدخول</h1>
 
-            <div className="bg-gray-100 h-1/2 p-8  shadow-md w-full max-w-md rounded-xl">
-                <h1 className="text-2xl font-bold mb-6 text-center">تسجيل الدخول</h1>
-                {
-                    loading ? <Loader /> : (
-                        <form onSubmit={handleSubmit} className="space-y-6">
+                        <form onSubmit={handleSubmit} className='grid grid-cols-1 max-lg:grid-cols-1 justify-center p-4 gap-4 w-full mx-auto'>
                             {/* Username Field */}
-                            <div>
-                                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                            <div className='flex flex-col gap-2'>
+                                <label htmlFor="name" className='font-bold text-zinc-100 bg-yellow-600 p-1 w-32 rounded-xl text-center'>
                                     الاسم
                                 </label>
                                 <input
@@ -54,14 +57,14 @@ const Login = () => {
                                     id="name"
                                     value={credentials.name}
                                     onChange={handleChange}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    className="p-2 bg-gray-50 rounded-xl w-full max-w-xs shadow-md border-2 border-yellow-600"
                                     required
                                 />
                             </div>
 
                             {/* Password Field */}
-                            <div>
-                                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                            <div className='flex flex-col gap-2'>
+                                <label htmlFor="password" className='font-bold text-zinc-100 bg-yellow-600 p-1 w-32 rounded-xl text-center'>
                                     الرقم السري
                                 </label>
                                 <input
@@ -70,7 +73,7 @@ const Login = () => {
                                     id="password"
                                     value={credentials.password}
                                     onChange={handleChange}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    className="p-2 bg-gray-50 rounded-xl w-full max-w-xs shadow-md border-2 border-yellow-600"
                                     required
                                 />
                             </div>
@@ -79,15 +82,15 @@ const Login = () => {
                             <div>
                                 <button
                                     type="submit"
-                                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                    className="btn hover:bg-green-300 bg-green-800 text-white hover:text-black"
                                 >
                                     تسجيل الدخول
                                 </button>
                             </div>
                         </form>
-                    )
-                }
-            </div>
+
+                    </div>
+                )}
         </div>
     )
 }
